@@ -1,5 +1,5 @@
 {
-  "name": "ReactDatePicker",
+  "name": "lin-react-date-picker",
   "version": "1.0.0",
   "description": "basic react component",
   "main": "lib/index.js",
