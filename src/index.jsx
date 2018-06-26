@@ -15,7 +15,8 @@ class ReactDatePicker extends Component {
       pitchDate: '',
       days: '',
       renderArray: [],
-      selectDate: ''
+      selectDate: '',
+      isFocus: false
     }
   }
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -25,7 +26,8 @@ class ReactDatePicker extends Component {
     return {
       pitchDate: prevState.pitchDate || nextProps.value
     }
-  } 
+  }
+  
   componentDidMount() {
     const self = this;
     document.addEventListener('click', function(e) {
@@ -62,10 +64,10 @@ class ReactDatePicker extends Component {
       renderArray: renderArray,
       lastMonthDates: lastMonthDates,
       beforeDays: beforeDays,
-      showPicker: true,
       currentMonth: currentMonth,
       currentYear: currentYear,
-      selectDate: selectDate
+      selectDate: selectDate,
+      isFocus: true
     })
   }
 
@@ -120,11 +122,6 @@ class ReactDatePicker extends Component {
       renderArray.push(k+1);
     }
     return renderArray;
-  }
-
-  clickInput = (e) => {
-    e.stopPropagation();  
-    e.nativeEvent.stopImmediatePropagation();
   }
 
   // 获取上个个年份
@@ -294,8 +291,15 @@ class ReactDatePicker extends Component {
     e.nativeEvent.stopImmediatePropagation();
   }
 
+  handleBlur = () => {
+    this.setState({
+      isFocus: false,
+      showPicker: true
+    })
+  }
+
   render() {
-    const { pitchDate, showPicker, days,  beforeDays, renderArray, currentYear, currentMonth, currentDate, selectDate} = this.state;
+    const { pitchDate, showPicker, days,  beforeDays, renderArray, currentYear, currentMonth, currentDate, selectDate,  isFocus} = this.state;
     return(
       <div className={cx('date-picker')}>
         <input
@@ -304,9 +308,13 @@ class ReactDatePicker extends Component {
           placeholder="请选择时间"
           onFocus={this.setPicker}
           value={pitchDate}
-          onClick={this.clickInput}
+          onBlur={this.handleBlur}
         />
-        <div className={cx('date-container')} style={{display: showPicker ? 'block' : 'none'}} onClick={this.stopPropagation}>
+        <div 
+          className={cx('date-container')}
+          style={{display: showPicker || isFocus ? 'block' : 'none'}}
+          onClick={this.stopPropagation}
+        >
           <div className={cx('date-header')}>
             <span
               onClick={this.setLastYear}
